@@ -1,0 +1,30 @@
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+
+###> phpunit/phpunit ###
+/phpunit.xml
+###< phpunit/phpunit ###
+
+###> doctrine/doctrine-bundle ###
+/public/uploads/*
+!/public/uploads/events/
+!/public/uploads/events/.gitkeep
+###< doctrine/doctrine-bundle ###
+
+# JWT keys (ne jamais committer !)
+/config/jwt/private.pem
+/config/jwt/public.pem
+
+# OS / IDE
+.DS_Store
+.idea/
+.vscode/
+*.swp
+node_modules/
