@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+{% block title %}Événements — EventHub{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1>Tous les événements</h1>
+    <p>{{ events|length }} événement(s) à venir</p>
+</div>
+
+{% if events is not empty %}
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem">
+    {% for event in events %}
+    <a href="{{ path('app_event_show', {id: event.id}) }}" style="text-decoration:none;color:inherit">
+        <div class="card">
+            <div style="height:160px;background:linear-gradient(135deg,var(--card2) 0%,#1e3050 100%);display:flex;align-items:center;justify-content:center;font-size:2.5rem;overflow:hidden">
+                {% if event.image %}<img src="/uploads/events/{{ event.image }}" style="width:100%;height:100%;object-fit:cover" alt="{{ event.title }}">
+                {% else %}🎪{% endif %}
+            </div>
+            <div style="padding:1.5rem">
+                <div style="display:flex;gap:0.75rem;margin-bottom:0.75rem;font-size:0.78rem;color:var(--muted)">
+                    <span>📅 {{ event.date|date('d/m/Y H:i') }}</span>
+                </div>
+                <h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:0.5rem">{{ event.title }}</h3>
+                <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem;line-height:1.5">{{ event.description|slice(0,90) }}{% if event.description|length > 90 %}…{% endif %}</p>
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                    <span style="font-size:0.78rem;color:var(--muted)">📍 {{ event.location|slice(0,28) }}</span>
+                    {% set avail = event.availableSeats %}
+                    <span class="badge {% if avail > 0 %}badge-success{% else %}badge-danger{% endif %}">
+                        {% if avail > 0 %}{{ avail }} places{% else %}Complet{% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+{% else %}
+<div style="text-align:center;padding:4rem;color:var(--muted)">
+    <div style="font-size:3rem;margin-bottom:1rem">📭</div>
+    <p>Aucun événement disponible pour le moment.</p>
+</div>
+{% endif %}
+{% endblock %}

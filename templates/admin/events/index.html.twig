@@ -1,0 +1,79 @@
+{% extends 'admin/base_admin.html.twig' %}
+{% block title %}Événements — Admin{% endblock %}
+{% block page_title %}🎪 Gestion des événements{% endblock %}
+
+{% block body %}
+<div class="flex justify-between items-center mb-3">
+    <p class="text-muted" style="font-size:0.875rem">{{ events|length }} événement(s) au total</p>
+    <a href="{{ path('admin_event_new') }}" class="btn btn-primary">➕ Nouvel événement</a>
+</div>
+
+<div class="card">
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Titre</th>
+                    <th>Date</th>
+                    <th>Lieu</th>
+                    <th>Places</th>
+                    <th>Réservations</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in events %}
+                <tr>
+                    <td>
+                        {% if event.image %}
+                            <img src="/uploads/events/{{ event.image }}" class="img-thumb" alt="">
+                        {% else %}
+                            <span style="font-size:1.5rem">🎪</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span style="font-weight:600">{{ event.title|slice(0,40) }}{% if event.title|length > 40 %}…{% endif %}</span>
+                    </td>
+                    <td class="text-muted" style="font-size:0.82rem">
+                        {{ event.date|date('d/m/Y') }}<br>
+                        <span style="color:var(--accent)">{{ event.date|date('H:i') }}</span>
+                    </td>
+                    <td class="text-muted" style="font-size:0.82rem">{{ event.location|slice(0,30) }}</td>
+                    <td>
+                        <span style="font-size:0.82rem">
+                            <span style="color:var(--accent2)">{{ event.availableSeats }}</span>
+                            <span class="text-muted"> / {{ event.seats }}</span>
+                        </span>
+                    </td>
+                    <td>
+                        <a href="{{ path('admin_event_reservations', {id: event.id}) }}" class="badge badge-info" style="text-decoration:none">
+                            {{ event.reservations|length }} résa.
+                        </a>
+                    </td>
+                    <td>
+                        <div class="flex gap-2">
+                            <a href="{{ path('admin_event_edit', {id: event.id}) }}" class="btn btn-outline btn-sm">✏️ Modifier</a>
+                            <form method="post" action="{{ path('admin_event_delete', {id: event.id}) }}" onsubmit="return confirm('Supprimer cet événement ?');" style="display:inline">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ event.id) }}">
+                                <button class="btn btn-danger btn-sm" type="submit">🗑️</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7">
+                        <div class="empty-state">
+                            <div class="icon">📭</div>
+                            <p>Aucun événement créé.</p>
+                            <a href="{{ path('admin_event_new') }}" class="btn btn-primary" style="margin-top:1rem">➕ Créer le premier événement</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

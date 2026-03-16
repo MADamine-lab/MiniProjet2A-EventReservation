@@ -1,0 +1,52 @@
+{% extends 'admin/base_admin.html.twig' %}
+{% block title %}Toutes les réservations — Admin{% endblock %}
+{% block page_title %}📋 Toutes les réservations{% endblock %}
+
+{% block body %}
+<div class="card">
+    <div class="card-header">
+        <h2>{{ reservations|length }} réservation(s)</h2>
+    </div>
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nom</th>
+                    <th>Email</th>
+                    <th>Téléphone</th>
+                    <th>Événement</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reservation in reservations %}
+                <tr>
+                    <td class="text-muted" style="font-size:0.8rem">{{ reservation.id }}</td>
+                    <td style="font-weight:600">{{ reservation.name }}</td>
+                    <td>
+                        <a href="mailto:{{ reservation.email }}" style="color:var(--accent);text-decoration:none;font-size:0.85rem">{{ reservation.email }}</a>
+                    </td>
+                    <td class="text-muted" style="font-size:0.85rem">{{ reservation.phone }}</td>
+                    <td>
+                        <a href="{{ path('admin_event_reservations', {id: reservation.event.id}) }}" style="color:var(--text);text-decoration:none;font-size:0.85rem">
+                            {{ reservation.event.title|slice(0,30) }}{% if reservation.event.title|length > 30 %}…{% endif %}
+                        </a>
+                    </td>
+                    <td class="text-muted" style="font-size:0.8rem">{{ reservation.createdAt|date('d/m/Y H:i') }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6">
+                        <div class="empty-state">
+                            <div class="icon">📭</div>
+                            <p>Aucune réservation enregistrée.</p>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

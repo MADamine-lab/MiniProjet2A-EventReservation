@@ -1,0 +1,207 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}EventHub — Réservations d'Événements{% endblock %}
+
+{% block stylesheets %}
+<style>
+.hero {
+    text-align: center;
+    padding: 5rem 2rem 4rem;
+    position: relative;
+    overflow: hidden;
+}
+.hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,212,170,0.12) 0%, transparent 70%);
+    pointer-events: none;
+}
+.hero-tag {
+    display: inline-block;
+    background: rgba(0,212,170,0.1);
+    border: 1px solid rgba(0,212,170,0.3);
+    color: var(--accent);
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+}
+.hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 1.25rem;
+    color: var(--text);
+}
+.hero h1 span { color: var(--accent); }
+.hero p {
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 520px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.7;
+}
+.hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+.hero-stats {
+    display: flex;
+    gap: 3rem;
+    justify-content: center;
+    margin-top: 4rem;
+    padding-top: 3rem;
+    border-top: 1px solid var(--border);
+}
+.stat-item { text-align: center; }
+.stat-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--accent);
+}
+.stat-label { font-size: 0.85rem; color: var(--muted); margin-top: 0.25rem; }
+
+.events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+.event-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: transform 0.25s, box-shadow 0.25s;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+.event-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 48px rgba(0,212,170,0.12);
+    border-color: rgba(0,212,170,0.35);
+}
+.event-card-img {
+    height: 180px;
+    background: linear-gradient(135deg, var(--card2) 0%, #1e3050 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    overflow: hidden;
+}
+.event-card-img img { width: 100%; height: 100%; object-fit: cover; }
+.event-card-body { padding: 1.5rem; }
+.event-card-meta {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.78rem;
+    color: var(--muted);
+}
+.event-card-meta span { display: flex; align-items: center; gap: 0.3rem; }
+.event-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+    color: var(--text);
+    line-height: 1.3;
+}
+.event-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.6; }
+.event-card-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.seats-pill {
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+}
+.seats-available { background: rgba(0,212,170,0.1); color: var(--accent); }
+.seats-full      { background: rgba(239,68,68,0.1); color: #f87171; }
+.section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+.section-subtitle { color: var(--muted); margin-bottom: 2rem; font-size: 0.95rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <div class="hero-tag">🎯 ISSAT Sousse · FIA3-GL</div>
+    <h1>Réservez vos <span>Événements</span><br>en quelques clics</h1>
+    <p>Découvrez les conférences, workshops et hackathons organisés par l'ISSAT. Inscrivez-vous facilement et gérez vos réservations.</p>
+    <div class="hero-actions">
+        <a href="{{ path('app_events') }}" class="btn btn-primary">🗓 Voir tous les événements</a>
+        {% if not app.user %}
+            <a href="{{ path('app_register') }}" class="btn btn-secondary">Créer un compte</a>
+        {% endif %}
+    </div>
+    <div class="hero-stats">
+        <div class="stat-item">
+            <div class="stat-number">{{ events|length }}</div>
+            <div class="stat-label">Événements à venir</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">500+</div>
+            <div class="stat-label">Participants attendus</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">100%</div>
+            <div class="stat-label">Gratuit</div>
+        </div>
+    </div>
+</div>
+
+{% if events is not empty %}
+<div style="margin-top: 2rem">
+    <h2 class="section-title">Prochains événements</h2>
+    <p class="section-subtitle">Réservez votre place avant qu'il ne soit trop tard !</p>
+    <div class="events-grid">
+        {% for event in events %}
+        <a href="{{ path('app_event_show', {id: event.id}) }}" class="event-card">
+            <div class="event-card-img">
+                {% if event.image %}
+                    <img src="/uploads/events/{{ event.image }}" alt="{{ event.title }}">
+                {% else %}
+                    🎪
+                {% endif %}
+            </div>
+            <div class="event-card-body">
+                <div class="event-card-meta">
+                    <span>📅 {{ event.date|date('d MMM Y', 'fr') }}</span>
+                    <span>📍 {{ event.location|slice(0, 25) }}{% if event.location|length > 25 %}…{% endif %}</span>
+                </div>
+                <h3>{{ event.title }}</h3>
+                <p>{{ event.description|slice(0, 100) }}{% if event.description|length > 100 %}…{% endif %}</p>
+            </div>
+            <div class="event-card-footer">
+                {% set available = event.availableSeats %}
+                <span class="seats-pill {% if available > 0 %}seats-available{% else %}seats-full{% endif %}">
+                    {% if available > 0 %}{{ available }} places disponibles{% else %}Complet{% endif %}
+                </span>
+                <span style="color: var(--accent); font-size: 0.85rem; font-weight: 600;">Voir →</span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% else %}
+<div style="text-align:center;padding:4rem;color:var(--muted)">
+    <div style="font-size:3rem;margin-bottom:1rem">📭</div>
+    <p>Aucun événement à venir pour le moment.</p>
+</div>
+{% endif %}
+{% endblock %}

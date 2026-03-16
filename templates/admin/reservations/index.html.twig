@@ -1,0 +1,75 @@
+{% extends 'admin/base_admin.html.twig' %}
+{% block title %}Réservations — {{ event.title }}{% endblock %}
+{% block page_title %}📋 Réservations — {{ event.title|slice(0,35) }}{% endblock %}
+
+{% block body %}
+<div class="breadcrumb">
+    <a href="{{ path('admin_events') }}">🎪 Événements</a>
+    <span>›</span>
+    <span>Réservations</span>
+</div>
+
+<!-- Event summary -->
+<div class="card mb-3" style="margin-bottom:1.5rem">
+    <div class="card-body" style="display:flex;align-items:center;gap:2rem;flex-wrap:wrap">
+        <div>
+            <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:0.25rem">Événement</div>
+            <div style="font-weight:700;font-size:1.05rem">{{ event.title }}</div>
+        </div>
+        <div>
+            <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:0.25rem">Date</div>
+            <div style="font-weight:600">{{ event.date|date('d/m/Y à H:i') }}</div>
+        </div>
+        <div>
+            <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:0.25rem">Lieu</div>
+            <div style="font-weight:600">{{ event.location }}</div>
+        </div>
+        <div>
+            <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:0.25rem">Taux d'occupation</div>
+            <div style="font-weight:700;color:var(--accent)">{{ reservations|length }} / {{ event.seats }}</div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2>{{ reservations|length }} réservation(s)</h2>
+        <a href="{{ path('admin_event_edit', {id: event.id}) }}" class="btn btn-outline btn-sm">✏️ Modifier l'événement</a>
+    </div>
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nom</th>
+                    <th>Email</th>
+                    <th>Téléphone</th>
+                    <th>Date réservation</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reservation in reservations %}
+                <tr>
+                    <td class="text-muted" style="font-size:0.8rem">{{ reservation.id }}</td>
+                    <td style="font-weight:600">{{ reservation.name }}</td>
+                    <td class="text-muted" style="font-size:0.85rem">
+                        <a href="mailto:{{ reservation.email }}" style="color:var(--accent);text-decoration:none">{{ reservation.email }}</a>
+                    </td>
+                    <td class="text-muted" style="font-size:0.85rem">{{ reservation.phone }}</td>
+                    <td class="text-muted" style="font-size:0.8rem">{{ reservation.createdAt|date('d/m/Y H:i') }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5">
+                        <div class="empty-state">
+                            <div class="icon">📭</div>
+                            <p>Aucune réservation pour cet événement.</p>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

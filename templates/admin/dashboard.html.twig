@@ -1,0 +1,116 @@
+{% extends 'admin/base_admin.html.twig' %}
+{% block title %}Dashboard — Admin EventHub{% endblock %}
+{% block page_title %}🏠 Dashboard{% endblock %}
+
+{% block body %}
+<!-- STATS -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon purple">🎪</div>
+        <div>
+            <div class="stat-value">{{ totalEvents }}</div>
+            <div class="stat-label">Événements</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon cyan">📋</div>
+        <div>
+            <div class="stat-value">{{ totalReservations }}</div>
+            <div class="stat-label">Réservations totales</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon green">✅</div>
+        <div>
+            <div class="stat-value">{{ events|filter(e => e.availableSeats > 0)|length }}</div>
+            <div class="stat-label">Événements actifs</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon orange">🔥</div>
+        <div>
+            <div class="stat-value">{{ events|filter(e => e.availableSeats == 0)|length }}</div>
+            <div class="stat-label">Événements complets</div>
+        </div>
+    </div>
+</div>
+
+<!-- RECENT EVENTS -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+    <div class="card">
+        <div class="card-header">
+            <h2>📅 Événements récents</h2>
+            <a href="{{ path('admin_events') }}" class="btn btn-outline btn-sm">Voir tout</a>
+        </div>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Titre</th>
+                        <th>Date</th>
+                        <th>Places</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for event in events|slice(0, 6) %}
+                    <tr>
+                        <td>
+                            <a href="{{ path('admin_event_edit', {id: event.id}) }}" style="color:var(--text);text-decoration:none;font-weight:500">
+                                {{ event.title|slice(0, 30) }}{% if event.title|length > 30 %}…{% endif %}
+                            </a>
+                        </td>
+                        <td class="text-muted" style="font-size:0.8rem">{{ event.date|date('d/m/Y') }}</td>
+                        <td>
+                            {% set avail = event.availableSeats %}
+                            <span class="badge {% if avail > 0 %}badge-success{% else %}badge-danger{% endif %}">
+                                {{ avail > 0 ? avail ~ ' libres' : 'Complet' }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="3" class="empty-state">Aucun événement.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2>🕐 Réservations récentes</h2>
+            <a href="{{ path('admin_all_reservations') }}" class="btn btn-outline btn-sm">Voir tout</a>
+        </div>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Événement</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reservation in recentReservations %}
+                    <tr>
+                        <td style="font-weight:500">{{ reservation.name }}</td>
+                        <td class="text-muted" style="font-size:0.8rem">
+                            {{ reservation.event.title|slice(0, 22) }}{% if reservation.event.title|length > 22 %}…{% endif %}
+                        </td>
+                        <td class="text-muted" style="font-size:0.8rem">{{ reservation.createdAt|date('d/m H:i') }}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="3" class="empty-state">Aucune réservation.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- QUICK ACTIONS -->
+<div style="margin-top:1.5rem; display:flex; gap:1rem; flex-wrap:wrap;">
+    <a href="{{ path('admin_event_new') }}" class="btn btn-primary">➕ Créer un événement</a>
+    <a href="{{ path('admin_all_reservations') }}" class="btn btn-outline">📋 Toutes les réservations</a>
+    <a href="{{ path('app_events') }}" class="btn btn-outline" target="_blank">🌐 Voir le site public</a>
+</div>
+{% endblock %}

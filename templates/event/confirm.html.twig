@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+{% block title %}Réservation confirmée !{% endblock %}
+{% block content %}
+<div style="max-width:520px;margin:3rem auto;text-align:center">
+    <div style="width:80px;height:80px;background:rgba(0,212,170,0.12);border:2px solid var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 2rem">✓</div>
+
+    <h1 style="font-family:'Playfair Display',serif;font-size:1.8rem;margin-bottom:0.75rem;color:var(--accent)">Réservation confirmée !</h1>
+    <p style="color:var(--muted);font-size:1rem;margin-bottom:2.5rem">Votre place a été réservée avec succès. Voici le récapitulatif :</p>
+
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;text-align:left;margin-bottom:2rem">
+        <div style="display:grid;gap:1rem">
+            <div style="display:flex;justify-content:space-between;padding-bottom:1rem;border-bottom:1px solid var(--border)">
+                <span style="color:var(--muted);font-size:0.85rem">Événement</span>
+                <span style="font-weight:600;font-size:0.95rem">{{ reservation.event.title }}</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding-bottom:1rem;border-bottom:1px solid var(--border)">
+                <span style="color:var(--muted);font-size:0.85rem">Date</span>
+                <span style="font-weight:600">{{ reservation.event.date|date('d/m/Y à H:i') }}</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding-bottom:1rem;border-bottom:1px solid var(--border)">
+                <span style="color:var(--muted);font-size:0.85rem">Lieu</span>
+                <span style="font-weight:600">{{ reservation.event.location }}</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding-bottom:1rem;border-bottom:1px solid var(--border)">
+                <span style="color:var(--muted);font-size:0.85rem">Nom</span>
+                <span style="font-weight:600">{{ reservation.name }}</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding-bottom:1rem;border-bottom:1px solid var(--border)">
+                <span style="color:var(--muted);font-size:0.85rem">Email</span>
+                <span style="font-weight:600">{{ reservation.email }}</span>
+            </div>
+            <div style="display:flex;justify-content:space-between">
+                <span style="color:var(--muted);font-size:0.85rem">N° réservation</span>
+                <span style="font-weight:600;color:var(--accent)">#{{ reservation.id }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+        <a href="{{ path('app_events') }}" class="btn btn-secondary">← Voir d'autres événements</a>
+        <a href="{{ path('app_home') }}" class="btn btn-primary">🏠 Accueil</a>
+    </div>
+</div>
+{% endblock %}
