@@ -181,7 +181,7 @@
             </div>
             <div class="event-card-body">
                 <div class="event-card-meta">
-                    <span>📅 {{ event.date|date('d MMM Y', 'fr') }}</span>
+                    <span>📅 {{ event.date|date('d/m/Y') }}</span>
                     <span>📍 {{ event.location|slice(0, 25) }}{% if event.location|length > 25 %}…{% endif %}</span>
                 </div>
                 <h3>{{ event.title }}</h3>

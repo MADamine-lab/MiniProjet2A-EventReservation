@@ -19,7 +19,7 @@
             <div style="display:flex;align-items:center;gap:0.5rem;color:var(--muted);font-size:0.9rem">
                 <span style="font-size:1.1rem">📅</span>
                 <div>
-                    <div style="color:var(--text);font-weight:600">{{ event.date|date('l d MMMM Y', 'fr')|capitalize }}</div>
+                    <div style="color:var(--text);font-weight:600">{{ event.date|date('d/m/Y')|capitalize }}</div>
                     <div>{{ event.date|date('H:i') }}</div>
                 </div>
             </div>
