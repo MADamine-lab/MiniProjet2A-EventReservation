@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+{% block title %}Email non vérifié — EventHub{% endblock %}
+{% block content %}
+<div style="max-width:520px;margin:4rem auto;text-align:center">
+
+    <!-- Icon -->
+    <div style="width:90px;height:90px;background:rgba(245,158,11,0.12);border:2px solid rgba(245,158,11,0.4);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin:0 auto 2rem">
+        📧
+    </div>
+
+    <h1 style="font-family:'Playfair Display',serif;font-size:1.8rem;margin-bottom:0.75rem;color:#f59e0b">
+        Email non vérifié
+    </h1>
+
+    <p style="color:var(--muted);font-size:1rem;line-height:1.7;margin-bottom:2rem">
+        Votre compte existe mais votre adresse email n'a pas encore été vérifiée.<br>
+        Consultez votre boîte mail et cliquez sur le lien de vérification.
+    </p>
+
+    <!-- Steps -->
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:left;margin-bottom:2rem">
+        <p style="font-weight:700;margin-bottom:1rem;font-size:0.9rem;color:var(--text)">📋 Que faire ?</p>
+        <div style="display:flex;flex-direction:column;gap:0.75rem">
+            <div style="display:flex;gap:0.75rem;align-items:flex-start">
+                <span style="background:rgba(108,99,255,0.15);color:var(--accent);width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0">1</span>
+                <span style="font-size:0.9rem;color:var(--muted)">Vérifiez votre boîte mail (y compris les spams)</span>
+            </div>
+            <div style="display:flex;gap:0.75rem;align-items:flex-start">
+                <span style="background:rgba(108,99,255,0.15);color:var(--accent);width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0">2</span>
+                <span style="font-size:0.9rem;color:var(--muted)">Cliquez sur le lien <strong style="color:var(--text)">« Vérifier mon email »</strong></span>
+            </div>
+            <div style="display:flex;gap:0.75rem;align-items:flex-start">
+                <span style="background:rgba(108,99,255,0.15);color:var(--accent);width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0">3</span>
+                <span style="font-size:0.9rem;color:var(--muted)">Revenez vous connecter</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions -->
+    <div style="display:flex;flex-direction:column;gap:0.75rem">
+        <a href="{{ path('app_resend_verification') }}" class="btn btn-primary" style="justify-content:center;padding:0.9rem">
+            📤 Renvoyer l'email de vérification
+        </a>
+        <a href="{{ path('app_login') }}" class="btn btn-secondary" style="justify-content:center;padding:0.9rem">
+            ← Retour à la connexion
+        </a>
+    </div>
+
+    <!-- Mailpit hint (dev only) -->
+    <div style="margin-top:2rem;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);border-radius:8px;padding:1rem;font-size:0.82rem;color:var(--muted)">
+        💡 En mode développement, consultez les emails sur
+        <a href="http://localhost:8025" target="_blank" style="color:var(--accent2);font-weight:600">http://localhost:8025</a>
+        (Mailpit)
+    </div>
+</div>
+{% endblock %}

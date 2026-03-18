@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+{% block title %}Vérification en attente{% endblock %}
+{% block content %}
+<div style="max-width:520px;margin:4rem auto;text-align:center">
+
+    <div style="width:90px;height:90px;background:rgba(108,99,255,0.12);border:2px solid var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin:0 auto 2rem">📧</div>
+
+    <h1 style="font-family:'Playfair Display',serif;font-size:1.8rem;margin-bottom:0.75rem;color:var(--accent)">Vérifiez votre email</h1>
+
+    {% if email %}
+    <p style="color:var(--muted);font-size:1rem;line-height:1.7;margin-bottom:2rem">
+        Un email a été envoyé à <strong style="color:var(--text)">{{ email }}</strong>.<br>
+        Cliquez sur le lien pour activer votre compte.
+    </p>
+    {% endif %}
+
+    {% if verifyUrl %}
+    <div style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.3);border-radius:12px;padding:1.5rem;margin-bottom:2rem">
+        <p style="font-size:0.85rem;color:#4ade80;font-weight:600;margin-bottom:1rem">
+            💡 Mode développement — Lien de vérification direct :
+        </p>
+        <a href="{{ verifyUrl }}" class="btn btn-primary" style="justify-content:center;padding:0.9rem;width:100%;display:flex">
+            ✅ Vérifier mon email maintenant
+        </a>
+        <p style="font-size:0.75rem;color:var(--muted);margin-top:0.75rem;word-break:break-all">{{ verifyUrl }}</p>
+    </div>
+    {% endif %}
+
+    <div style="display:flex;flex-direction:column;gap:0.75rem">
+        <a href="{{ path('app_resend_verification') }}" class="btn btn-outline" style="justify-content:center">
+            📤 Renvoyer l'email
+        </a>
+        <a href="{{ path('app_login') }}" class="btn btn-secondary" style="justify-content:center">
+            ← Retour connexion
+        </a>
+    </div>
+
+    <div style="margin-top:2rem;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);border-radius:8px;padding:1rem;font-size:0.82rem;color:var(--muted)">
+        📬 Emails visibles sur <a href="http://localhost:8025" target="_blank" style="color:var(--accent2);font-weight:600">localhost:8025</a> (Mailpit)
+    </div>
+</div>
+{% endblock %}

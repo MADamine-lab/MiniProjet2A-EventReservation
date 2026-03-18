@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block title %}Inscription — EventHub{% endblock %}
 {% block content %}
-<div style="max-width:460px;margin:2rem auto">
+<div style="max-width:480px;margin:2rem auto">
     <div style="text-align:center;margin-bottom:2rem">
         <h1 style="font-family:'Playfair Display',serif;font-size:1.8rem;margin-bottom:0.5rem">Créer un compte</h1>
         <p style="color:var(--muted);font-size:0.9rem">Rejoignez EventHub pour réserver vos places</p>
@@ -12,116 +12,41 @@
 
         <div class="form-group">
             {{ form_label(form.username) }}
-            {{ form_widget(form.username, {'attr': {'placeholder': 'Choisissez un pseudo', 'class': 'form-control'}}) }}
+            {{ form_widget(form.username, {'attr': {'class': 'form-control'}}) }}
             {{ form_errors(form.username) }}
         </div>
 
         <div class="form-group">
-            {{ form_label(form.plainPassword) }}
-            {{ form_widget(form.plainPassword, {'attr': {'placeholder': 'Minimum 6 caractères', 'class': 'form-control'}}) }}
-            {{ form_errors(form.plainPassword) }}
+            {{ form_label(form.email) }}
+            {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.email) }}
+            <small style="color:var(--muted);font-size:0.78rem">Un email de vérification sera envoyé à cette adresse.</small>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.plainPassword.first) }}
+            {{ form_widget(form.plainPassword.first, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.plainPassword.first) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.plainPassword.second) }}
+            {{ form_widget(form.plainPassword.second, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.plainPassword.second) }}
         </div>
 
         <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;padding:0.9rem;font-size:1rem;margin-top:0.5rem">
-            Créer mon compte →
+            📧 Créer mon compte
         </button>
 
         {{ form_end(form) }}
-
-        <div style="display:flex;align-items:center;gap:1rem;margin:1.5rem 0">
-            <div style="flex:1;height:1px;background:var(--border)"></div>
-            <span style="color:var(--muted);font-size:0.8rem">ou</span>
-            <div style="flex:1;height:1px;background:var(--border)"></div>
-        </div>
-
-        <!-- PASSKEY REGISTER -->
-        <button id="passkeyRegisterBtn" class="btn btn-secondary" style="width:100%;justify-content:center;padding:0.9rem" disabled>
-            🔑 Enregistrer une Passkey (après inscription)
-        </button>
-        <p id="passkeyStatus" style="text-align:center;font-size:0.82rem;color:var(--muted);margin-top:0.75rem;display:none"></p>
     </div>
 
     <p style="text-align:center;margin-top:1.5rem;color:var(--muted);font-size:0.9rem">
         Déjà un compte ? <a href="{{ path('app_login') }}" style="color:var(--accent)">Se connecter</a>
     </p>
+    <p style="text-align:center;margin-top:0.75rem;color:var(--muted);font-size:0.85rem">
+        Email non reçu ? <a href="{{ path('app_resend_verification') }}" style="color:var(--accent)">Renvoyer</a>
+    </p>
 </div>
-{% endblock %}
-
-{% block javascripts %}
-<script>
-// Enable passkey button only if WebAuthn is supported
-if (window.PublicKeyCredential) {
-    const btn = document.getElementById('passkeyRegisterBtn');
-    btn.disabled = false;
-    btn.addEventListener('click', async () => {
-        const status = document.getElementById('passkeyStatus');
-        const usernameField = document.querySelector('input[id*="username"]');
-        const username = usernameField ? usernameField.value.trim() : '';
-
-        if (!username) {
-            status.style.display = 'block';
-            status.textContent = '⚠ Veuillez d\'abord saisir un nom d\'utilisateur.';
-            status.style.color = '#f59e0b';
-            return;
-        }
-
-        try {
-            btn.disabled = true;
-            status.style.display = 'block';
-            status.textContent = '⏳ Génération des options...';
-
-            const optRes = await fetch('/api/passkey/register/options', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ username })
-            });
-            const { options } = await optRes.json();
-
-            status.textContent = '🔑 Créez votre Passkey...';
-
-            const credential = await navigator.credentials.create({
-                publicKey: {
-                    challenge: Uint8Array.from(atob(options.challenge), c => c.charCodeAt(0)),
-                    rp: options.rp,
-                    user: {
-                        id: Uint8Array.from(atob(options.user.id), c => c.charCodeAt(0)),
-                        name: options.user.name,
-                        displayName: options.user.displayName,
-                    },
-                    pubKeyCredParams: options.pubKeyCredParams,
-                    timeout: options.timeout,
-                    attestation: options.attestation,
-                    authenticatorSelection: options.authenticatorSelection,
-                }
-            });
-
-            const verifyRes = await fetch('/api/passkey/register/verify', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    id: credential.id,
-                    rawId: btoa(String.fromCharCode(...new Uint8Array(credential.rawId))),
-                    type: credential.type,
-                    response: {
-                        attestationObject: btoa(String.fromCharCode(...new Uint8Array(credential.response.attestationObject))),
-                        clientDataJSON: btoa(String.fromCharCode(...new Uint8Array(credential.response.clientDataJSON))),
-                    }
-                })
-            });
-
-            const result = await verifyRes.json();
-            if (result.success) {
-                status.textContent = '✓ Passkey enregistrée avec succès !';
-                status.style.color = 'var(--accent)';
-            } else {
-                throw new Error(result.error || 'Erreur serveur');
-            }
-        } catch (e) {
-            status.textContent = '✕ ' + (e.message || 'Erreur lors de l\'enregistrement');
-            status.style.color = '#f87171';
-            btn.disabled = false;
-        }
-    });
-}
-</script>
 {% endblock %}
