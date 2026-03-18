@@ -38,12 +38,10 @@ security:
                 default_target_path: admin_dashboard
                 username_parameter: username
                 password_parameter: password
+                enable_csrf: false
             logout:
                 path: admin_logout
                 target: admin_login
-            remember_me:
-                secret: '%kernel.secret%'
-                lifetime: 604800
 
         main:
             pattern: ^/
@@ -52,25 +50,22 @@ security:
                 login_path: app_login
                 check_path: app_login
                 default_target_path: app_events
+                username_parameter: username
+                password_parameter: password
+                enable_csrf: false
             logout:
                 path: app_logout
                 target: app_login
-            remember_me:
-                secret: '%kernel.secret%'
-                lifetime: 604800
 
     access_control:
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
-        - { path: ^/api/admin, roles: ROLE_ADMIN }
-        - { path: ^/api/user, roles: ROLE_USER }
         - { path: ^/api/passkey, roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/admin/login, roles: PUBLIC_ACCESS }
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/register, roles: PUBLIC_ACCESS }
-        - { path: ^/events, roles: PUBLIC_ACCESS }
-        - { path: ^/$, roles: PUBLIC_ACCESS }
+        - { path: ^/, roles: PUBLIC_ACCESS }
 
     role_hierarchy:
         ROLE_ADMIN: ROLE_USER
