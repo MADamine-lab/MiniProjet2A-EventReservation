@@ -17,7 +17,6 @@
 - [API REST](#-api-rest)
 - [JWT & Passkeys](#-jwt--passkeys)
 - [Structure des fichiers](#-structure-des-fichiers)
-- [Branches GitHub](#-branches-github)
 
 ---
 
@@ -322,18 +321,6 @@ docker-compose exec php php bin/console debug:router
 
 ---
 
-## 🌿 Branches GitHub
-
-```
-main              ← Code stable
-dev               ← Intégration et tests
-feature/auth      ← JWT + Passkeys + Email verification
-feature/admin     ← Interface administration
-feature/api       ← API REST
-feature/front     ← Interface utilisateur
-```
-
----
 
 ## 📝 Notes
 
